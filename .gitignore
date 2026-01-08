@@ -1,0 +1,15 @@
+.gradle
+.settings
+.project
+.classpath
+.vscode
+.idea
+build
+*.iml
+Pods
+xcuserdata
+local.properties
+local.gradle
+moko-resources-generated.js
+.fleet
+.kotlin
