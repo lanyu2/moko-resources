@@ -19,18 +19,29 @@ import platform.posix.malloc
 import platform.posix.rewind
 import kotlin.experimental.ExperimentalNativeApi
 
+/**
+ * HarmonyOS Native 文件资源
+ *
+ * @param filePath 文件相对路径
+ */
+actual class FileResource(val filePath: String) {
 
-actual class FileResource (val rawResId: Int) {
+    @OptIn(ExperimentalNativeApi::class)
+    @CName("FileResource_getFilePath")
+    fun getFilePath(): String = "/res/raw/$filePath"
+
     @OptIn(ExperimentalNativeApi::class, ExperimentalForeignApi::class)
     @CName("FileResource_readText")
     fun readText(): String {
-        val fullPath = "/res/raw/$rawResId"
-        val file = fopen(fullPath, "rb") ?: throw IllegalStateException("File resource not found: $rawResId")
+        val fullPath = getFilePath()
+        val file = fopen(fullPath, "rb")
+            ?: throw IllegalStateException("File resource not found: $filePath")
         try {
             fseek(file, 0, platform.posix.SEEK_END)
             val fileSize = ftell(file)
             rewind(file)
-            val buffer = malloc(fileSize.toULong() + 1u) ?: throw IllegalStateException("Failed to allocate memory")
+            val buffer = malloc(fileSize.toULong() + 1u)
+                ?: throw IllegalStateException("Failed to allocate memory")
             try {
                 val bytesRead = fread(buffer, 1u, fileSize.toULong(), file)
                 if (bytesRead != fileSize.toULong()) {
@@ -40,30 +51,20 @@ actual class FileResource (val rawResId: Int) {
                 byteBuffer[fileSize.toInt()] = 0.toByte()
                 return byteBuffer.toKString()
             } finally {
-                free(buffer)  // ✅ 修复：释放内存
+                free(buffer)
             }
         } finally {
             fclose(file)
         }
     }
-/*    fun readText(): String {
-        val fullPath = "/res/raw/$rawResId" // 鸿蒙Native资源路径适配，假设资源ID对应文件名
-        val file = fopen(fullPath, "rb") ?: throw IllegalStateException("File resource not found: $rawResId") // 替换Android专属异常
-        try {
-            fseek(file, 0, platform.posix.SEEK_END)
-            val fileSize = ftell(file)
-            rewind(file)
-            val buffer = malloc(fileSize.toULong() + 1u) ?: throw IllegalStateException("Failed to allocate memory")
-            val bytesRead = fread(buffer, 1u, fileSize.toULong(), file)
-            if (bytesRead != fileSize.toULong()) {
-                throw IllegalStateException("Failed to read entire file")
-            }
-            (buffer as CPointer<ByteVar>)[fileSize.toInt()] = 0.toByte()
-//            val byteBuffer = buffer as CPointer<ByteVar>
-//            byteBuffer[fileSize.toInt()] = 0.toByte()
-            return buffer.toKString()
-        } finally {
-            fclose(file)
-        }
-    }*/
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is FileResource) return false
+        return filePath == other.filePath
+    }
+
+    override fun hashCode(): Int = filePath.hashCode()
+
+    override fun toString(): String = "FileResource(filePath=$filePath)"
 }
