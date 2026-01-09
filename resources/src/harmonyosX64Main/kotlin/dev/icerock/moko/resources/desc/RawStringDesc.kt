@@ -9,6 +9,6 @@ import kotlin.experimental.ExperimentalNativeApi
 actual class RawStringDesc actual constructor(val string: String) :
     StringDesc{
     @OptIn(ExperimentalNativeApi::class)
-    @CName("RawStringDesc_toString")
+    @CName("RawStringDesc_localized")
     override fun localized() = string // 鸿蒙Native无Context
     }

@@ -12,7 +12,7 @@ actual class PluralStringDesc actual constructor(
     val number: Int
 ) : StringDesc{
     @OptIn(ExperimentalNativeApi::class)
-    @CName("PluralStringDesc_toString")
+    @CName("PluralStringDesc_localized")
     override fun localized(): String {
         return pluralsRes.getQuantityString(number) // 鸿蒙Native无Context
     }

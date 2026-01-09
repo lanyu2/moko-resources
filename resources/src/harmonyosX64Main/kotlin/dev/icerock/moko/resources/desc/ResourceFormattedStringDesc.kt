@@ -12,7 +12,7 @@ actual data class ResourceFormattedStringDesc actual constructor(
     val args: List<Any>
 ) : StringDesc {
     @OptIn(ExperimentalNativeApi::class)
-    @CName("ResourceFormattedStringDesc_toString")
+    @CName("ResourceFormattedStringDesc_localized")
     override fun localized(): String {
         // 鸿蒙Native无Resources，实现格式化逻辑
         val baseString = stringRes.getString()

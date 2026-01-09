@@ -10,6 +10,6 @@ object Utils {
     @OptIn(ExperimentalNativeApi::class)
     @CName("Utils_processArgs")
     fun processArgs(args: List<Any>): List<Any> {
-        return args.map { (it as? StringDesc)?.toString() ?: it } // 鸿蒙Native无Context
+        return args.map { (it as? StringDesc)?.localized() ?: it } // 鸿蒙Native无Context
     }
 }

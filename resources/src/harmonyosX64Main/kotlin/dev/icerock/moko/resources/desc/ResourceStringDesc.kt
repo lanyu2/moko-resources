@@ -10,7 +10,7 @@ import kotlin.experimental.ExperimentalNativeApi
 actual class ResourceStringDesc actual constructor(val stringRes: StringResource) :
     StringDesc{
     @OptIn(ExperimentalNativeApi::class)
-    @CName("ResourceStringDesc_toString")
+    @CName("ResourceStringDesc_localized")
     override fun localized(): String {
         return stringRes.getString() // 鸿蒙Native无Context
     }
