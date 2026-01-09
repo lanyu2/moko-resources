@@ -19,6 +19,7 @@ internal fun <T> createByPlatform(
     createJvm: () -> T,
     createJs: () -> T,
     createWasm: () -> T,
+    createLinux: () -> T = createJvm, // 新增参数，默认复用 JVM 的实现
 ): T {
     return when (kotlinPlatformType) {
         KotlinPlatformType.common -> createCommon()
@@ -42,6 +43,10 @@ internal fun <T> createByPlatform(
             KonanTarget.WATCHOS_DEVICE_ARM64,
             KonanTarget.WATCHOS_SIMULATOR_ARM64,
             KonanTarget.WATCHOS_X64 -> createApple()
+
+            // 新增 Linux 支持
+            KonanTarget.LINUX_X64,
+            KonanTarget.LINUX_ARM64 -> createLinux()
 
             else -> error("${konanTarget()} not supported by moko-resources now")
         }
