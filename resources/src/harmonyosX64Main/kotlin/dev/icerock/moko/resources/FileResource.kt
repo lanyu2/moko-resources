@@ -1,6 +1,7 @@
 /*
  * Copyright 2026 IceRock MAG Inc. Use of this source code is governed by the Apache 2.0 license.
- */
+ *//*
+
 
 package dev.icerock.moko.resources
 
@@ -60,9 +61,11 @@ actual class FileResource(val filePath: String) {
         }
     }
 
-    /**
+    */
+/**
      * 解码 UTF-8 字节数组，处理可能存在的 BOM
-     */
+     *//*
+
     private fun decodeUtf8WithBomHandling(bytes: ByteArray): String {
         // UTF-8 BOM: EF BB BF
         val hasUtf8Bom = bytes.size >= 3 &&
@@ -88,4 +91,30 @@ actual class FileResource(val filePath: String) {
     override fun hashCode(): Int = filePath.hashCode()
 
     override fun toString(): String = "FileResource(filePath=$filePath)"
+}*/
+/*
+ * Copyright 2026 IceRock MAG Inc. Use of this source code is governed by the Apache 2.0 license.
+ */
+
+package dev.icerock.moko.resources
+
+import kotlin.experimental.ExperimentalNativeApi
+
+actual class FileResource(val filePath: String) {
+
+    @OptIn(ExperimentalNativeApi::class)
+    @CName("FileResource_getFilePath")
+    fun getFilePath(): String = "/res/raw/$filePath"
+
+    @OptIn(ExperimentalNativeApi::class)
+    @CName("FileResource_readText")
+    fun readText(): String = FileUtils.readFileAsString(getFilePath())
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is FileResource) return false
+        return filePath == other.filePath
+    }
+
+    override fun hashCode(): Int = filePath.hashCode()
 }

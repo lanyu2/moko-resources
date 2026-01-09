@@ -1,6 +1,7 @@
 /*
  * Copyright 2026 IceRock MAG Inc. Use of this source code is governed by the Apache 2.0 license.
- */
+ *//*
+
 
 package dev.icerock.moko.resources
 
@@ -63,9 +64,11 @@ actual class AssetResource(val path: String) {
         }
     }
 
-    /**
+    */
+/**
      * 解码 UTF-8 字节数组，处理可能存在的 BOM
-     */
+     *//*
+
     private fun decodeUtf8WithBomHandling(bytes: ByteArray): String {
         // UTF-8 BOM: EF BB BF
         val hasUtf8Bom = bytes.size >= 3 &&
@@ -95,4 +98,45 @@ actual class AssetResource(val path: String) {
     override fun hashCode(): Int = path.hashCode()
 
     actual val originalPath: String by ::path
+}*/
+/*
+ * Copyright 2026 IceRock MAG Inc. Use of this source code is governed by the Apache 2.0 license.
+ */
+
+package dev.icerock.moko.resources
+
+import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.posix.fopen
+import kotlin.experimental.ExperimentalNativeApi
+
+actual class AssetResource(val path: String) {
+
+    @OptIn(ExperimentalNativeApi::class, ExperimentalForeignApi::class)
+    @CName("AssetResource_getInputStream")
+    fun getInputStream(): CPointer<platform.posix.FILE>? {
+        return fopen(getFullPath(), "rb")
+    }
+
+    private fun getFullPath(): String = "/res/raw/assets/${path.removeFirstSlash()}"
+
+    @OptIn(ExperimentalNativeApi::class)
+    @CName("AssetResource_readText")
+    fun readText(): String = FileUtils.readFileAsString(getFullPath())
+
+    @OptIn(ExperimentalNativeApi::class)
+    @CName("AssetResource_equals")
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is AssetResource) return false
+        return path == other.path
+    }
+
+    @OptIn(ExperimentalNativeApi::class)
+    @CName("AssetResource_hashCode")
+    override fun hashCode(): Int = path.hashCode()
+
+    actual val originalPath: String get() = path
 }
+
+internal fun String.removeFirstSlash(): String = removePrefix("/")
