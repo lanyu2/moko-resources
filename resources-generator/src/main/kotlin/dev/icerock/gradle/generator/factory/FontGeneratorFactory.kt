@@ -16,6 +16,7 @@ import dev.icerock.gradle.generator.resources.font.AppleFontResourceGenerator
 import dev.icerock.gradle.generator.resources.font.FontResourceGenerator
 import dev.icerock.gradle.generator.resources.font.JsFontResourceGenerator
 import dev.icerock.gradle.generator.resources.font.JvmFontResourceGenerator
+import dev.icerock.gradle.generator.resources.font.LinuxFontResourceGenerator
 import dev.icerock.gradle.metadata.container.ResourceType
 import dev.icerock.gradle.metadata.resource.FontMetadata
 import dev.icerock.gradle.toModifier
@@ -80,6 +81,12 @@ internal class FontGeneratorFactory(
                     resourcesPackageName = resourcesPackageName,
                     resourcesGenerationDir = outputResourcesDir,
                     filePathMode = JsFilePathMode.rawPath
+                )
+            },
+            // ✅ 新增：Linux/HarmonyOS 专用生成器
+            createLinux = {
+                LinuxFontResourceGenerator(
+                    resourcesGenerationDir = outputResourcesDir
                 )
             }
         )

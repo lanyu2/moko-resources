@@ -17,7 +17,7 @@ import dev.icerock.moko.resources.StringResource
  */
 
 // ===== StringResource 扩展 =====
-
+/*
 fun StringResource.desc(): ResourceStringDesc = ResourceStringDesc(this)
 
 fun StringResource.desc(vararg args: Any): ResourceFormattedStringDesc =
@@ -28,7 +28,7 @@ fun StringResource.desc(vararg args: Any): ResourceFormattedStringDesc =
 fun PluralsResource.desc(number: Int): PluralStringDesc = PluralStringDesc(this, number)
 
 fun PluralsResource.desc(number: Int, vararg args: Any): PluralFormattedStringDesc =
-    PluralFormattedStringDesc(this, number, args.toList())
+    PluralFormattedStringDesc(this, number, args.toList())*/
 
 // ===== 已废弃的 Int 扩展（编译时错误）=====
 

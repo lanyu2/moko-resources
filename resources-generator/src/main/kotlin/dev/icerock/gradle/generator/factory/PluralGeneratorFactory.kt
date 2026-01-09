@@ -15,6 +15,7 @@ import dev.icerock.gradle.generator.resources.plural.AndroidPluralResourceGenera
 import dev.icerock.gradle.generator.resources.plural.ApplePluralResourceGenerator
 import dev.icerock.gradle.generator.resources.plural.JsPluralResourceGenerator
 import dev.icerock.gradle.generator.resources.plural.JvmPluralResourceGenerator
+import dev.icerock.gradle.generator.resources.plural.LinuxPluralResourceGenerator
 import dev.icerock.gradle.generator.resources.plural.PluralResourceGenerator
 import dev.icerock.gradle.metadata.container.ResourceType
 import dev.icerock.gradle.metadata.resource.PluralMetadata
@@ -87,6 +88,13 @@ internal class PluralGeneratorFactory(
                     resourcesPackageName = resourcesPackageName,
                     resourcesGenerationDir = outputResourcesDir,
                     filePathMode = JsFilePathMode.rawPath
+                )
+            },
+            // ✅ 新增：Linux/HarmonyOS 专用生成器
+            createLinux = {
+                LinuxPluralResourceGenerator(
+                    flattenClassPackage = resourcesPackageName.flatName,
+                    resourcesGenerationDir = outputResourcesDir
                 )
             }
         )

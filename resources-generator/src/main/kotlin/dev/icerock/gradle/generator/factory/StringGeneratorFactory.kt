@@ -15,6 +15,7 @@ import dev.icerock.gradle.generator.resources.string.AndroidStringResourceGenera
 import dev.icerock.gradle.generator.resources.string.AppleStringResourceGenerator
 import dev.icerock.gradle.generator.resources.string.JsStringResourceGenerator
 import dev.icerock.gradle.generator.resources.string.JvmStringResourceGenerator
+import dev.icerock.gradle.generator.resources.string.LinuxStringResourceGenerator
 import dev.icerock.gradle.generator.resources.string.StringResourceGenerator
 import dev.icerock.gradle.metadata.container.ResourceType
 import dev.icerock.gradle.metadata.resource.StringMetadata
@@ -87,6 +88,13 @@ internal class StringGeneratorFactory(
                     resourcesPackageName = resourcesPackageName,
                     resourcesGenerationDir = outputResourcesDir,
                     filePathMode = JsFilePathMode.rawPath
+                )
+            },
+            // ✅ 新增：Linux/HarmonyOS 专用生成器
+            createLinux = {
+                LinuxStringResourceGenerator(
+                    flattenClassPackage = resourcesPackageName.flatName,
+                    resourcesGenerationDir = outputResourcesDir
                 )
             }
         )

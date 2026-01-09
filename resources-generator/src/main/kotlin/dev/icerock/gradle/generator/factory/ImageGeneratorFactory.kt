@@ -16,6 +16,7 @@ import dev.icerock.gradle.generator.resources.image.AppleImageResourceGenerator
 import dev.icerock.gradle.generator.resources.image.ImageResourceGenerator
 import dev.icerock.gradle.generator.resources.image.JsImageResourceGenerator
 import dev.icerock.gradle.generator.resources.image.JvmImageResourceGenerator
+import dev.icerock.gradle.generator.resources.image.LinuxImageResourceGenerator
 import dev.icerock.gradle.metadata.container.ResourceType
 import dev.icerock.gradle.metadata.resource.ImageMetadata
 import dev.icerock.gradle.toModifier
@@ -83,6 +84,12 @@ internal class ImageGeneratorFactory(
                 JsImageResourceGenerator(
                     resourcesGenerationDir = outputResourcesDir,
                     filePathMode = JsFilePathMode.rawPath
+                )
+            },
+            // ✅ 新增：Linux/HarmonyOS 专用生成器
+            createLinux = {
+                LinuxImageResourceGenerator(
+                    resourcesGenerationDir = outputResourcesDir
                 )
             }
         )

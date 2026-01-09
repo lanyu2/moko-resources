@@ -15,6 +15,7 @@ import dev.icerock.gradle.generator.resources.color.AppleColorResourceGenerator
 import dev.icerock.gradle.generator.resources.color.ColorResourceGenerator
 import dev.icerock.gradle.generator.resources.color.JsColorResourceGenerator
 import dev.icerock.gradle.generator.resources.color.JvmColorResourceGenerator
+import dev.icerock.gradle.generator.resources.color.LinuxColorResourceGenerator
 import dev.icerock.gradle.metadata.container.ResourceType
 import dev.icerock.gradle.metadata.resource.ColorMetadata
 import dev.icerock.gradle.toModifier
@@ -70,6 +71,10 @@ internal class ColorGeneratorFactory(
             },
             createWasm = {
                 JsColorResourceGenerator()
+            },
+            // ✅ 新增：Linux/HarmonyOS 专用生成器
+            createLinux = {
+                LinuxColorResourceGenerator()
             }
         )
     }

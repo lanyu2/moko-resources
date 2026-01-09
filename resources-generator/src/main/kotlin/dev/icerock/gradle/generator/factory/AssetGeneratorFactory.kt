@@ -16,6 +16,7 @@ import dev.icerock.gradle.generator.resources.asset.AppleAssetResourceGenerator
 import dev.icerock.gradle.generator.resources.asset.AssetResourceGenerator
 import dev.icerock.gradle.generator.resources.asset.JsAssetResourceGenerator
 import dev.icerock.gradle.generator.resources.asset.JvmAssetResourceGenerator
+import dev.icerock.gradle.generator.resources.asset.LinuxAssetResourceGenerator
 import dev.icerock.gradle.metadata.container.ResourceType
 import dev.icerock.gradle.metadata.resource.AssetMetadata
 import dev.icerock.gradle.toModifier
@@ -87,6 +88,12 @@ internal class AssetGeneratorFactory(
                 JsAssetResourceGenerator(
                     resourcesGenerationDir = outputResourcesDir,
                     filePathMode = JsFilePathMode.rawPath
+                )
+            },
+            // ✅ 新增：Linux/HarmonyOS 专用生成器
+            createLinux = {
+                LinuxAssetResourceGenerator(
+                    assetsGenerationDir = outputAssetsDir
                 )
             }
         )
