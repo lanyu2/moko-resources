@@ -30,6 +30,28 @@ actual class AssetResource(val path: String) {
     @OptIn(ExperimentalNativeApi::class, ExperimentalForeignApi::class)
     @CName("AssetResource_readText")
     fun readText(): String {
+        val file = getInputStream() ?: throw IllegalStateException("Asset file not found: $path")
+        try {
+            fseek(file, 0, platform.posix.SEEK_END)
+            val fileSize = ftell(file)
+            rewind(file)
+            val buffer = malloc(fileSize.toULong() + 1u) ?: throw IllegalStateException("Failed to allocate memory")
+            try {
+                val bytesRead = fread(buffer, 1u, fileSize.toULong(), file)
+                if (bytesRead != fileSize.toULong()) {
+                    throw IllegalStateException("Failed to read entire file")
+                }
+                val byteBuffer = buffer as CPointer<ByteVar>
+                byteBuffer[fileSize.toInt()] = 0.toByte()
+                return byteBuffer.toKString()  // toKString() 会复制字符串
+            } finally {
+                platform.posix.free(buffer)  // ✅ 添加 free 释放内存
+            }
+        } finally {
+            fclose(file)
+        }
+    }
+/*    fun readText(): String {
         val file = getInputStream() ?: throw IllegalStateException("Asset file not found: $path") // 替换Android专属异常
         try {
             fseek(file, 0, platform.posix.SEEK_END)
@@ -47,7 +69,8 @@ actual class AssetResource(val path: String) {
         } finally {
             fclose(file)
         }
-    }
+    }*/
+
     @OptIn(ExperimentalNativeApi::class, ExperimentalForeignApi::class)
     @CName("AssetResource_equals")
     override fun equals(other: Any?): Boolean {
