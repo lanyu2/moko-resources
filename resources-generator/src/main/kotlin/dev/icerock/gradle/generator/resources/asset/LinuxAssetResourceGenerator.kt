@@ -34,11 +34,12 @@ internal class LinuxAssetResourceGenerator(
 
     override fun generateResourceFiles(data: List<AssetMetadata>) {
         data.forEach { metadata ->
-            val targetFile = File(assetsGenerationDir, metadata.pathRelativeToBase)
-            targetFile.parentFile.mkdirs()
+            val targetFile = assetsGenerationDir.resolve(metadata.pathRelativeToBase)
+            targetFile.parentFile?.mkdirs()
             metadata.filePath.copyTo(targetFile, overwrite = true)
         }
     }
+
 
     override fun generateBeforeProperties(
         builder: Builder,

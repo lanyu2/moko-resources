@@ -109,5 +109,5 @@ internal class LinuxPluralResourceGenerator(
 private val LanguageType.linuxResourcesSuffix: String
     get() = when (this) {
         LanguageType.Base -> ""
-        is LanguageType.Locale -> "_$language"
+        is LanguageType.Locale -> "_${language()}"
     }

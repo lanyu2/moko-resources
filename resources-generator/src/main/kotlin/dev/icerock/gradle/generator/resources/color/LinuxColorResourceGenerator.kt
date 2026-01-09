@@ -1,7 +1,3 @@
-/*
- * Copyright 2024 IceRock MAG Inc. Use of this source code is governed by the Apache 2.0 license.
- */
-
 package dev.icerock.gradle.generator.resources.color
 
 import com.squareup.kotlinpoet.ClassName
@@ -22,23 +18,26 @@ internal class LinuxColorResourceGenerator : PlatformResourceGenerator<ColorMeta
     override fun imports(): List<ClassName> = listOf(Constants.graphicsColorName)
 
     override fun generateInitializer(metadata: ColorMetadata): CodeBlock {
-        val lightColor: String = metadata.lightColor.toColorInitializer()
-        val darkColor: String? = metadata.darkColor?.toColorInitializer()
+        return when (val v = metadata.value) {
+            is ColorMetadata.ColorItem.Single -> {
+                CodeBlock.of(
+                    "ColorResource(lightColor = %L, darkColor = null)",
+                    v.color.toColorCode()
+                )
+            }
 
-        return if (darkColor != null) {
-            CodeBlock.of(
-                "ColorResource(lightColor = $lightColor, darkColor = $darkColor)"
-            )
-        } else {
-            CodeBlock.of(
-                "ColorResource(lightColor = $lightColor, darkColor = null)"
-            )
+            is ColorMetadata.ColorItem.Themed -> {
+                CodeBlock.of(
+                    "ColorResource(lightColor = %L, darkColor = %L)",
+                    v.light.toColorCode(),
+                    v.dark.toColorCode()
+                )
+            }
         }
     }
 
     override fun generateResourceFiles(data: List<ColorMetadata>) {
-        // Linux 平台不需要生成额外的资源文件
-        // 颜色值直接编码在 Kotlin 代码中
+        // Linux 平台不需要生成额外的资源文件：颜色值直接编码进 Kotlin
     }
 
     override fun generateBeforeProperties(
@@ -60,23 +59,15 @@ internal class LinuxColorResourceGenerator : PlatformResourceGenerator<ColorMeta
             classType = Constants.colorResourceName
         )
     }
+}
 
-    /**
-     * 将颜色值转换为 Color 初始化代码
-     */
-    private fun ColorMetadata.ColorItem.toColorInitializer(): String {
-        return "Color(0x${argbHex})"
-    }
-
-    /**
-     * 获取 ARGB 十六进制字符串
-     */
-    private val ColorMetadata.ColorItem.argbHex: String
-        get() {
-            val a = (alpha * 255).toInt().toString(16).padStart(2, '0')
-            val r = red.toString(16).padStart(2, '0')
-            val g = green.toString(16).padStart(2, '0')
-            val b = blue.toString(16).padStart(2, '0')
-            return "$a$r$g$b".uppercase()
-        }
+/**
+ * 生成 moko-graphics Color(...) 的 KotlinPoet 代码
+ *
+ * 注意：Color 构造参数具体是 Long/Int 取决于你项目里 Constants.graphicsColorName 指向的 Color 类。
+ * moko-graphics 通常支持 Color(0xAARRGGBB) 这种形式。
+ */
+private fun ColorMetadata.Color.toColorCode(): CodeBlock {
+    // ColorMetadata.Color.toArgbHex() 返回的是不带 0x 的 aarrggbb
+    return CodeBlock.of("Color(0x%L)", this.toArgbHex().uppercase())
 }
