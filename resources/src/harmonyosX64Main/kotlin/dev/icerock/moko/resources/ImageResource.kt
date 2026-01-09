@@ -22,7 +22,7 @@ actual data class ImageResource (
         return darkFilePath?.let { "/res/raw/$it" }
     }
 
-    override fun equals(other: Any?): Boolean {
+/*    override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is ImageResource) return false
         return filePath == other.filePath && darkFilePath == other.darkFilePath
@@ -32,5 +32,5 @@ actual data class ImageResource (
         var result = filePath.hashCode()
         result = 31 * result + (darkFilePath?.hashCode() ?: 0)
         return result
-    }
+    }*/
 }
