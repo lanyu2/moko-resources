@@ -139,4 +139,4 @@ actual class AssetResource(val path: String) {
     actual val originalPath: String get() = path
 }
 
-internal fun String.removeFirstSlash(): String = removePrefix("/")
+//internal fun String.removeFirstSlash(): String = removePrefix("/")

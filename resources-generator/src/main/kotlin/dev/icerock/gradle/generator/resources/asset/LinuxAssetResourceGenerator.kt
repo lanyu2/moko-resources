@@ -25,7 +25,8 @@ internal class LinuxAssetResourceGenerator(
     override fun imports(): List<ClassName> = emptyList()
 
     override fun generateInitializer(metadata: AssetMetadata): CodeBlock {
-        val relativePath = metadata.pathRelativeToBase
+        // 使用相对路径字符串
+        val relativePath = metadata.pathRelativeToBase.invariantSeparatorsPath
         return CodeBlock.of(
             "AssetResource(path = %S)",
             relativePath
@@ -34,12 +35,11 @@ internal class LinuxAssetResourceGenerator(
 
     override fun generateResourceFiles(data: List<AssetMetadata>) {
         data.forEach { metadata ->
-            val targetFile = assetsGenerationDir.resolve(metadata.pathRelativeToBase)
+            val targetFile = File(assetsGenerationDir, buildAssetPath(metadata))
             targetFile.parentFile?.mkdirs()
             metadata.filePath.copyTo(targetFile, overwrite = true)
         }
     }
-
 
     override fun generateBeforeProperties(
         builder: Builder,
@@ -59,5 +59,9 @@ internal class LinuxAssetResourceGenerator(
             metadata = metadata,
             classType = Constants.assetResourceName
         )
+    }
+
+    private fun buildAssetPath(metadata: AssetMetadata): String {
+        return metadata.pathRelativeToBase.path.replace('\\', '/')
     }
 }
