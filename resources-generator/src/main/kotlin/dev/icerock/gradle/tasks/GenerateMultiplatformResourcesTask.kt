@@ -200,6 +200,10 @@ abstract class GenerateMultiplatformResourcesTask : DefaultTask() {
             },
             createWasm = {
                 JsContainerGenerator()
+            },
+            //新增Linux端
+            createLinux = {
+                NOPContainerGenerator()
             }
         )
     }
