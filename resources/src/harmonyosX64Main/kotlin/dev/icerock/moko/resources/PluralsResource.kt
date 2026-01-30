@@ -172,3 +172,6 @@ internal object PluralsResourceLoader {
 
     fun clearCache() { bundles.clear() }
 }
+fun clearPluralsResourceCache(){
+    PluralsResourceLoader.clearCache()
+}

@@ -191,3 +191,7 @@ internal object StringResourceLoader {
         bundles.clear()
     }
 }
+
+fun clearStringResourceCache(){
+    StringResourceLoader.clearCache()
+}
